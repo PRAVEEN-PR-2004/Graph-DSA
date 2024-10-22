@@ -1,51 +1,42 @@
-import java.util.*;;
+import java.util.*;
 
 public class Dfs {
-    private Map<Integer, List<Integer>> adjList;
+    private ArrayList<ArrayList<Integer>> adjList; // Use ArrayList of ArrayLists
 
-    public Dfs() {
-        this.adjList = new HashMap<>();
-    }
-
-    public void addVertex(int vertex) {
-        adjList.put(vertex, new LinkedList<>());
-    }
-
-    public void removeVertex(int vertex) {
-        adjList.remove(vertex);
-        for (List<Integer> al : adjList.values()) {
-            al.remove((Integer) vertex);
+    // Constructor to initialize the adjacency list
+    public Dfs(int vertices) {
+        adjList = new ArrayList<>();
+        for (int i = 0; i < vertices; i++) {
+            adjList.add(new ArrayList<>()); // Initialize each vertex's list
         }
-
     }
 
+    // Method to add an edge between two vertices
     public void addEdge(int source, int destination) {
         adjList.get(source).add(destination);
-        adjList.get(destination).add(source);
+        adjList.get(destination).add(source); // Undirected graph, add both directions
     }
 
-    public void removeEdge(int source, int destination) {
-        adjList.get(source).remove(destination);
-        adjList.get(destination).remove(source);
-    }
-
+    // Method to print the adjacency list
     public void printAdjList() {
-        for (Map.Entry<Integer, List<Integer>> entry : adjList.entrySet()) {
-            System.out.print("Vertex " + entry.getKey() + " is connected to: ");
-            for (Integer neighbor : entry.getValue()) {
+        for (int i = 0; i < adjList.size(); i++) {
+            System.out.print("Vertex " + i + " is connected to: ");
+            for (int neighbor : adjList.get(i)) {
                 System.out.print(neighbor + " ");
             }
-            System.out.println(); // Move to the next line after printing all neighbors
+            System.out.println();
         }
     }
 
+    // Iterative DFS method
     public void DFSIterative(int startVertex) {
         Set<Integer> visited = new HashSet<>(); // To keep track of visited vertices
-        Stack<Integer> st = new Stack<>(); // Stack for DFS traversal
-        st.push(startVertex); // Start with the starting vertex
+        Stack<Integer> stack = new Stack<>(); // Stack for DFS traversal
 
-        while (!st.isEmpty()) {
-            int currentVertex = st.pop(); // Pop the top of the stack
+        stack.push(startVertex); // Start with the given vertex
+
+        while (!stack.isEmpty()) {
+            int currentVertex = stack.pop(); // Pop the top of the stack
 
             // If this vertex has not been visited yet
             if (!visited.contains(currentVertex)) {
@@ -55,7 +46,7 @@ public class Dfs {
                 // Push all unvisited neighbors onto the stack
                 for (int neighbor : adjList.get(currentVertex)) {
                     if (!visited.contains(neighbor)) {
-                        st.push(neighbor);
+                        stack.push(neighbor);
                     }
                 }
             }
@@ -63,15 +54,16 @@ public class Dfs {
     }
 
     public static void main(String[] args) {
-        Dfs g = new Dfs();
-        g.addVertex(0);
-        g.addVertex(2);
-        g.addVertex(1);
+        int numVertices = 3; // Define the number of vertices
+        Dfs g = new Dfs(numVertices); // Create the graph with 3 vertices
+
+        // Add edges between vertices
         g.addEdge(0, 1);
         g.addEdge(2, 1);
+
+        // Print adjacency list and perform DFS
         g.printAdjList();
+        System.out.println("DFS starting from vertex 0:");
         g.DFSIterative(0);
-
     }
-
 }
