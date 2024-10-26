@@ -28,8 +28,7 @@ public class FloodFill {
     }
 
     public int[][] floodFill(int[][] image, int sr, int sc, int color) {
-        int n = image.length;
-        int m = image[0].length;
+
         Set<String> visited = new HashSet<>();
 
         int originalColor = image[sr][sc];
